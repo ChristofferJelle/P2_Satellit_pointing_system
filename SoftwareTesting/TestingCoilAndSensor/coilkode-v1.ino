@@ -12,8 +12,12 @@ void StartCoil(int coilNumber, int power, uint32_t duration, bool forward) {
 }
 
 void RunCoils() {
+  unsigned long now = micros();
+  unsigned long timeChange = (now - lastTime);
+
   for (int i = 0; i <= 1; i++) {
     if (coils[i].running && !coils[i].hasInput) {
+
       if (coils[i].forward) {
         analogWrite(coils[i].fwdPin, coils[i].power);
         coils[i].hasInput = true;
@@ -27,6 +31,15 @@ void RunCoils() {
       analogWrite(coils[i].rvrPin, 0);
       coils[i].running = false;
       coils[i].hasInput = false;
+      lastTime = now; //should only run once, when the coils done moving
     }
+    if (!(coils[0].running && coils[1].running) && (timeChange >= sampleTime)) { //use magnetometer after 0.4 sek of coils turning off
+        UpdateAK09918();
+        /* Yaw estimation for Z angle */
+        UpdateYaw();
+        calculateZAngle();
+        PID();//pid starts coils again
+        lastTime = now;
+      }
   }
 }

@@ -1,4 +1,4 @@
-#include "src/Grove_IMU_9DOF_ICM20600_AK09918/AK09918.h" //https://github.com/Seeed-Studio/Seeed_ICM20600_AK09918
+#include "src/Grove_IMU_9DOF_ICM20600_AK09918/AK09918.h"  //https://github.com/Seeed-Studio/Seeed_ICM20600_AK09918
 #include "src/Grove_IMU_9DOF_ICM20600_AK09918/ICM20600.h"
 #include <Wire.h>
 #include <Kalman.h>  // Source: https://github.com/TKJElectronics/KalmanFilter
@@ -59,7 +59,13 @@ typedef struct {
 
 coil coils[2];
 
+int sampleTime = 5000;  // 500 milis in marcro
+int lastTime = timer - 5000;
 
+// ===========================ESPNOW============================
+#include <esp_now.h>
+#include <WiFi.h>
+#include <esp_wifi.h>
 
 void setup() {
   int sda_pin = 21;
@@ -86,8 +92,8 @@ void setup() {
   //turn the PID on
   myPID.SetMode(AUTOMATIC);
   myPID.SetSampleTime(10);
-  
-  // COILS====================================
+
+  // =========================COILS====================================
   pinMode(Coil1Fwd, OUTPUT);
   pinMode(Coil1Rvr, OUTPUT);
   pinMode(Coil2Fwd, OUTPUT);
@@ -97,12 +103,13 @@ void setup() {
   coils[1].rvrPin = Coil2Rvr;
   coils[1].fwdPin = Coil2Fwd;
 
+  //=========================ESPNOW=============================
+  pinMode(BUTTON_PIN, INPUT);
+  InitESP32_NOW();
+  Serial.println(WiFi.macAddress());
+
   timer = micros();  // Initialize the timer
 }
-
-uint32_t var1;
-uint32_t var2;
-uint32_t var3;
 
 void loop() {
   UpdateICM20600();
@@ -112,19 +119,6 @@ void loop() {
   UpdatePitchRoll();
   CalculateXYangle();
 
-  /* Yaw estimation for Z angle */
-  UpdateAK09918();
-  UpdateYaw();
-  calculateZAngle();
-  
-  Serial.flush();
-  PID();
-  Serial.print(kalAngleZ);
-  Serial.print(",");
-  Serial.print(Output);
-  Serial.println();
-
-  RunCoils();  
-
+  RunCoils();
   //delay(100);
 }

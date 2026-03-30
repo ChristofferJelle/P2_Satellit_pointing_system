@@ -9,12 +9,14 @@ void PID() {
     myPID.SetTunings(aggKp, aggKi, aggKd);
   }
 
-
-  if (kalAngleZ > 0) {
-    myPID.Compute(false);
-    analogWrite(Coil1Fwd, Output);
-  } else if (kalAngleZ < 0) {
-    myPID.Compute(true);
+    myPID.Compute();
+  if (kalAngleZ > Setpoint) { // dont know ifs im using both coils correctly here 
+  //output is caluclated from myPID.compute the closer it is to setpoint, the less power coil getting if any when at setpoint.
+    StartCoil(1, Output, 10, true);
+    StartCoil(2, Output, 10, true);
+  } else if (kalAngleZ < Setpoint) {
+    StartCoil(1, Output, 10, false);
+    StartCoil(2, Output, 10, true);
     //reverse it homebridge go brr ig?
     //analogWrite(PIN2_OUTPUT, Output);
   }
