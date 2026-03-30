@@ -27,8 +27,8 @@ uint32_t timer;
 double dt;
 
 //PID
-#define PIN_INPUT 0
-#define PIN_OUTPUT 3
+//#define PIN_INPUT 0
+//#define PIN_OUTPUT 3
 
 //Define Variables we'll be connecting to
 double Setpoint = 180, Output;
@@ -62,8 +62,8 @@ coil coils[2];
 
 
 void setup() {
-  int sda_pin = 7;
-  int scl_pin = 8;
+  int sda_pin = 21;
+  int scl_pin = 22;
 
   Wire.setPins(sda_pin, scl_pin);
   Wire.begin();
@@ -108,7 +108,6 @@ void loop() {
   UpdateICM20600();
   dt = (double)(micros() - timer) / 1000000;  // Calculate delta time
   timer = micros();
-
   /* Roll and pitch estimation for jew tilt compensation */
   UpdatePitchRoll();
   CalculateXYangle();

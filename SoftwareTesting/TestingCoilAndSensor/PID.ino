@@ -12,7 +12,7 @@ void PID() {
 
   if (kalAngleZ > 0) {
     myPID.Compute(false);
-    analogWrite(PIN_OUTPUT, Output);
+    analogWrite(Coil1Fwd, Output);
   } else if (kalAngleZ < 0) {
     myPID.Compute(true);
     //reverse it homebridge go brr ig?
