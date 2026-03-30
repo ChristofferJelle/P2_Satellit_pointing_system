@@ -1,5 +1,5 @@
-#include "AK09918.h" //https://github.com/Seeed-Studio/Seeed_ICM20600_AK09918
-#include "ICM20600.h"
+#include "src/Grove_IMU_9DOF_ICM20600_AK09918/AK09918.h" //https://github.com/Seeed-Studio/Seeed_ICM20600_AK09918
+#include "src/Grove_IMU_9DOF_ICM20600_AK09918/ICM20600.h"
 #include <Wire.h>
 #include <Kalman.h>  // Source: https://github.com/TKJElectronics/KalmanFilter
 #include "src/PID/PID_v1.h"
