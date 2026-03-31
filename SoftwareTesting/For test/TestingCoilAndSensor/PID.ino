@@ -16,7 +16,7 @@ void PID() {
     StartCoil(2, Output, 10, true);
   } else if (kalAngleZ < Setpoint) {
     StartCoil(1, Output, 10, false);
-    StartCoil(2, Output, 10, true);
+    StartCoil(2, Output, 10, false);
     //reverse it homebridge go brr ig?
     //analogWrite(PIN2_OUTPUT, Output);
   }
