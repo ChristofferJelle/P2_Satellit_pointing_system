@@ -35,6 +35,7 @@ void transformation(float uncalibrated_values[3]) {
 }
 
 void UpdateYaw() {  // See: https://www.nxp.com.cn/docs/en/application-note/AN4248.pdf
+  /*
   magX *= -1;       // Invert axis - this it done here, as it should be done after the calibration
   magZ *= -1;
   transformation(uncalibrated_values);
@@ -42,10 +43,14 @@ void UpdateYaw() {  // See: https://www.nxp.com.cn/docs/en/application-note/AN42
   double pitchAngle = kalAngleY * DEG_TO_RAD;
 
   //Tilt-Compensation Algorithm equation 19, for x,y axis
+  //nwm this shit is ass
   double Bfy = magZC * sin(rollAngle) - magYC * cos(rollAngle);
   double Bfx = magXC * cos(pitchAngle) + magYC * sin(pitchAngle) * sin(rollAngle) + magZC * sin(pitchAngle) * cos(rollAngle);
   yaw = atan2(-Bfy, Bfx) * RAD_TO_DEG;  //switch -bfx and bfy around if dont work ig
   yaw *= -1;
+  */
+  float yaw = atan2(magYC, magXC) * RAD_TO_DEG;
+
 }
 
 void calculateZAngle() {

@@ -15,13 +15,13 @@ float magXC, magYC, magZC;
 float uncalibrated_values[3];
 float calibrated_values[3];
 
-int32_t accX, accY, accZ;
+//int32_t accX, accY, accZ;
 float gyroX, gyroY, gyroZ;
 double gyroXrate, gyroYrate, gyroZrate;
-double roll, pitch, yaw;  // Roll and pitch are calculated using the accelerometer while yaw is calculated using the magnetometer
-
-double kalAngleX, kalAngleY, kalAngleZ;  // Calculated angle using a Kalman filter
-
+double  yaw;  // Roll and pitch are calculated using the accelerometer while yaw is calculated using the magnetometer
+//double roll, pitch,
+double kalAngleZ;  // Calculated angle using a Kalman filter
+//double kalAngleX, kalAngleY,
 uint32_t timer;
 
 double dt;
@@ -82,11 +82,11 @@ void setup() {
   /* Set Kalman and gyro starting angle */
   UpdateAK09918();
   UpdateICM20600();
-  UpdatePitchRoll();
+  //UpdatePitchRoll();
   UpdateYaw();
 
-  kalmanX.setAngle(roll);
-  kalmanY.setAngle(pitch);
+  //kalmanX.setAngle(roll);
+  //kalmanY.setAngle(pitch);
   kalmanZ.setAngle(yaw);
 
   //turn the PID on
@@ -104,7 +104,7 @@ void setup() {
   coils[1].fwdPin = Coil2Fwd;
 
   //=========================ESPNOW=============================
-  pinMode(BUTTON_PIN, INPUT);
+  //pinMode(BUTTON_PIN, INPUT);
   InitESP32_NOW();
   Serial.println(WiFi.macAddress());
 
@@ -116,8 +116,8 @@ void loop() {
   dt = (double)(micros() - timer) / 1000000;  // Calculate delta time
   timer = micros();
   /* Roll and pitch estimation for jew tilt compensation */
-  UpdatePitchRoll();
-  CalculateXYangle();
+  //UpdatePitchRoll();
+ //CalculateXYangle();
 
   RunCoils();
   //delay(100);
