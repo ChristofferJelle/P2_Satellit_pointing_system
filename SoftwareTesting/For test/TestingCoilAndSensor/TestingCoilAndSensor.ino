@@ -6,8 +6,8 @@
 
 ICM20600 icm20600(true);
 
-Kalman kalmanX, kalmanY, kalmanZ;  // Create the Kalman instances
-
+Kalman kalmanZ;  // Create the Kalman instances
+//Kalman kalmanX, kalmanY,
 AK09918 ak09918;
 int32_t magX, magY, magZ;
 float magXC, magYC, magZC;
