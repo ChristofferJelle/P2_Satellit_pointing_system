@@ -112,13 +112,11 @@ void setup() {
 }
 
 void loop() {
-  UpdateICM20600();
   dt = (double)(micros() - timer) / 1000000;  // Calculate delta time
   timer = micros();
   /* Roll and pitch estimation for jew tilt compensation */
   //UpdatePitchRoll();
  //CalculateXYangle();
-
   RunCoils();
   //delay(100);
 }

@@ -35,6 +35,7 @@ void RunCoils() {
     }
     if (!(coils[0].running && coils[1].running) && (timeChange >= sampleTime)) { //use magnetometer after 0.4 sek of coils turning off
         UpdateAK09918();
+         UpdateICM20600();
         /* Yaw estimation for Z angle */
         UpdateYaw();
         calculateZAngle();

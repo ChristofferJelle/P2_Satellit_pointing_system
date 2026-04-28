@@ -3,12 +3,15 @@ void UpdateICM20600() {
   accX = icm20600.getAccelerationX();
   accY = icm20600.getAccelerationY();
   accZ = icm20600.getAccelerationZ();
-*/
+
   gyroX = icm20600.getGyroscopeX();
   gyroY = icm20600.getGyroscopeY();
-  gyroZ = icm20600.getGyroscopeZ();
+  
   gyroXrate = gyroX / 32.8;  // Convert to deg/s
   gyroYrate = gyroY / 32.8;  // Convert to deg/s
+*/
+
+  gyroZ = icm20600.getGyroscopeZ();
   gyroZrate = gyroZ / 32.8;  // Convert to deg/s
 }
 

@@ -50,7 +50,7 @@ void UpdateYaw() {  // See: https://www.nxp.com.cn/docs/en/application-note/AN42
   yaw *= -1;
   */
   float yaw = atan2(magYC, magXC) * RAD_TO_DEG;
-
+  
 }
 
 void calculateZAngle() {
