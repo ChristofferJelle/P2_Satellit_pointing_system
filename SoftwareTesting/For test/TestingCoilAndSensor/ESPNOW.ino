@@ -1,3 +1,35 @@
+void InitDisplay() {
+  //initialise lillygo screen
+  tft.init();
+  tft.setRotation(1);  // landscape mode
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextColor(TFT_WHITE);
+  tft.setTextSize(2);  // scale text
+}
+
+//draws the screen using library funktions based on the VT100 standard thing
+void DrawDisplay() {
+  //tft.fillScreen(TFT_BLACK);
+  //tft.setTextColor(TFT_WHITE);
+    // Erase previous numbers by drawing a filled rectangle in background color
+  tft.fillRect(spX, spY, spW, spH, TFT_BLACK);
+
+  tft.setCursor(0, 0);
+  tft.print("Setpoint: ");
+  tft.print(setpoint, 1);  // 1 decimal place
+
+  tft.fillRect(akX, akY, akW, akH, TFT_BLACK);
+  tft.setCursor(0, 30);
+  tft.print("Aktuel vinkel: ");
+  tft.print(yaw, 1);  // 1 decimal place
+  //Serial.println(kalAngleZ);
+
+    tft.fillRect(PIDX, PIDY, PIDW, PIDH, TFT_BLACK);
+  tft.setCursor(0, 60);
+  tft.print("PID output: ");
+  tft.print(Output, 1);  // 1 decimal place
+}
+
 //initialise everything that has to do with setting up ESPNOW library
 void InitESP32_NOW() {
   //initialises what kinda wifi mode its in, rn its in accese point mode, so i dont have to connect to uni wifi with own student password.
@@ -13,6 +45,20 @@ void InitESP32_NOW() {
 
 // Callback when data is received
 void OnDataRecv(const uint8_t* mac, const uint8_t* incomingData, int len) {
-  memcpy(&Setpoint, incomingData, sizeof(Setpoint));
+  memcpy(&setpoint, incomingData, sizeof(setpoint));
+  Serial.println(setpoint);
 }
+
+//this funktion just uses a funktion to get the mac address and then returns it....and checks if it actually got it
+uint8_t* readMacAddress() {
+  static uint8_t baseMac[6];
+  esp_err_t ret = esp_wifi_get_mac(WIFI_IF_STA, baseMac);
+  if (ret == ESP_OK) {
+    return baseMac;
+  } else {
+    Serial.println("Failed to read MAC address");
+    return nullptr;
+  }
+}
+
 

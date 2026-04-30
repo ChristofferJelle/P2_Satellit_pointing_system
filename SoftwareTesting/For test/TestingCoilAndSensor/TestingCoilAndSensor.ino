@@ -15,10 +15,9 @@ float magXC, magYC, magZC;
 float uncalibrated_values[3];
 float calibrated_values[3];
 
-//int32_t accX, accY, accZ;
-float gyroX, gyroY, gyroZ;
-double gyroXrate, gyroYrate, gyroZrate;
-double  yaw;  // Roll and pitch are calculated using the accelerometer while yaw is calculated using the magnetometer
+float gyroZ;
+double gyroZrate;
+double yaw;  // Roll and pitch are calculated using the accelerometer while yaw is calculated using the magnetometer
 //double roll, pitch,
 double kalAngleZ;  // Calculated angle using a Kalman filter
 //double kalAngleX, kalAngleY,
@@ -30,14 +29,14 @@ double dt;
 //#define PIN_INPUT 0
 //#define PIN_OUTPUT 3
 
-//Define Variables we'll be connecting to
-double Setpoint = 180, Output;
+
+double setpoint = 180.0, Output;
 //Define the aggressive and conservative Tuning Parameters
 double aggKp = 4, aggKi = 0.2, aggKd = 1;
 //double consKp = 1, consKi = 0.05, consKd = 0.25;
 double consKp = 0.5, consKi = 0.0025, consKd = 0.125;
 //Specify the links and initial tuning parameters
-PID myPID(&kalAngleZ, &Output, &Setpoint, consKp, consKi, consKd, DIRECT);
+PID myPID(&kalAngleZ, &Output, &setpoint, consKp, consKi, consKd, DIRECT);
 
 //COILS ============================================================================
 
@@ -67,17 +66,48 @@ int lastTime = timer - 5000;
 #include <WiFi.h>
 #include <esp_wifi.h>
 
+// ===========================TFT============================
+//for testing pointing system only
+/**/
+#include <TFT_eSPI.h>  // LILYGO T-Display library
+#include <SPI.h>
+
+TFT_eSPI tft = TFT_eSPI();  // Create TFT object+
+
+// number field positions/sizes for tft refrech areas
+const int spX = 120;
+const int spY = 0;
+const int spW = 80;
+const int spH = 16 * 2;
+
+const int akX = 160;
+const int akY = 30;
+const int akW = 100;
+const int akH = 16 * 2;
+
+const int PIDX = 120;
+const int PIDY = 60;
+const int PIDW = 80;
+const int PIDH = 16 * 2;
+
 void setup() {
-  int sda_pin = 21;
-  int scl_pin = 22;
+
+  int sda_pin = 43;
+  int scl_pin = 44;
 
   Wire.setPins(sda_pin, scl_pin);
   Wire.begin();
   ak09918.initialize();
-  ak09918.switchMode(AK09918_CONTINUOUS_100HZ);
+  ak09918.switchMode(AK09918_POWER_DOWN);
+  ak09918.switchMode(AK09918_NORMAL); //insted of using Continuous measurement mode only power magometer when calling getData()
+
+
   icm20600.setGyroScaleRange(RANGE_1K_DPS);
   icm20600.initialize();
-  Serial.begin(115200);
+
+  InitDisplay();
+
+  Serial.begin(9600);
 
   /* Set Kalman and gyro starting angle */
   UpdateAK09918();
@@ -106,17 +136,28 @@ void setup() {
   //=========================ESPNOW=============================
   //pinMode(BUTTON_PIN, INPUT);
   InitESP32_NOW();
-  Serial.println(WiFi.macAddress());
 
+  //Serial.println(WiFi.macAddress());
+  /*
+  Serial.print("[DEFAULT] ESP32 Board MAC Address: ");
+  uint8_t* ownMac = readMacAddress();
+  //converts array into a string.
+  if (ownMac != nullptr) {
+    String ownMacHex;
+    for (int i = 0; i < 6; i++) {
+      String hexPart = String(ownMac[i], HEX);
+      if (hexPart.length() < 2) hexPart = "0" + hexPart;  // zero-pad if needed
+      ownMacHex += hexPart;
+      if (i < 5) ownMacHex += ":";  // add ':' except after last byte
+    }
+    Serial.println(ownMacHex);
+  }
+*/
   timer = micros();  // Initialize the timer
 }
 
 void loop() {
   dt = (double)(micros() - timer) / 1000000;  // Calculate delta time
   timer = micros();
-  /* Roll and pitch estimation for jew tilt compensation */
-  //UpdatePitchRoll();
- //CalculateXYangle();
   RunCoils();
-  //delay(100);
 }

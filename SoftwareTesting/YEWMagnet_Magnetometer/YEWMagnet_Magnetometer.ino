@@ -41,8 +41,8 @@ PID myPID(&kalAngleZ, &Output, &Setpoint, consKp, consKi, consKd, DIRECT);
 
 
 void setup() {
-  int sda_pin = 7;
-  int scl_pin = 8;
+  int sda_pin = 43;
+  int scl_pin = 44;
 
   Wire.setPins(sda_pin, scl_pin);
   Wire.begin();

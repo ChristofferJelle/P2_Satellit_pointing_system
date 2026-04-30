@@ -4,13 +4,12 @@
 #include <string.h>
 
 //adress of the mainESP32 in sending data to
-uint8_t broadcastAddress[] = { 0x08, 0x3a, 0xf2, 0x45, 0x3f, 0x50 };  //idk what main called rn
+uint8_t broadcastAddress[] = { 0xf0, 0x9e, 0x9e, 0x1f, 0x0a, 0xa0 };  //idk what main called rn
 
 esp_now_peer_info_t peerInfo;
 
 bool ConnectedToMaster = false;
-
-uint8_t setpoint;
+double setpoint;
 
 void setup() {
   Serial.begin(115200);
@@ -25,7 +24,8 @@ void setup() {
 void loop() {
   if (Serial.available() > 0) {
     // Read the incoming data as an integer
+
     setpoint = Serial.parseInt();
-    SendDataToMaster();
+    SendDataToMaster(setpoint);
   }
 }
