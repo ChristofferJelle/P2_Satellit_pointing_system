@@ -1,3 +1,4 @@
+//blame Lucas for mangle af commentar.
 void StartCoil(int coilNumber, int power, uint32_t duration, bool forward) {
   coils[coilNumber].startTime = millis();
   coils[coilNumber].runTime = duration;

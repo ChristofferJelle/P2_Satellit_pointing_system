@@ -1,5 +1,5 @@
+//initialise lillygo screen
 void InitDisplay() {
-  //initialise lillygo screen
   tft.init();
   tft.setRotation(1);  // landscape mode
   tft.fillScreen(TFT_BLACK);
@@ -9,9 +9,7 @@ void InitDisplay() {
 
 //draws the screen using library funktions based on the VT100 standard thing
 void DrawDisplay() {
-  //tft.fillScreen(TFT_BLACK);
-  //tft.setTextColor(TFT_WHITE);
-    // Erase previous numbers by drawing a filled rectangle in background color
+  // Erase previous numbers by drawing a filled rectangle in background color
   tft.fillRect(spX, spY, spW, spH, TFT_BLACK);
 
   tft.setCursor(0, 0);
@@ -22,9 +20,8 @@ void DrawDisplay() {
   tft.setCursor(0, 30);
   tft.print("Aktuel vinkel: ");
   tft.print(yaw, 1);  // 1 decimal place
-  //Serial.println(kalAngleZ);
 
-    tft.fillRect(PIDX, PIDY, PIDW, PIDH, TFT_BLACK);
+  tft.fillRect(PIDX, PIDY, PIDW, PIDH, TFT_BLACK);
   tft.setCursor(0, 60);
   tft.print("PID output: ");
   tft.print(Output, 1);  // 1 decimal place
@@ -32,14 +29,14 @@ void DrawDisplay() {
 
 //initialise everything that has to do with setting up ESPNOW library
 void InitESP32_NOW() {
-  //initialises what kinda wifi mode its in, rn its in accese point mode, so i dont have to connect to uni wifi with own student password.
+  //initialise wifi mode
   WiFi.mode(WIFI_STA);
 
   //initatite ESP_now with library's own funktion for comunication without router.
   if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
   }
-  //Register that i want to recive to cb. basically says "everytime i send data u just need to run this too"
+  //Register that i want to recive to cb (call back). Basically says "everytime i send data u just need to run this too"
   esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
 }
 

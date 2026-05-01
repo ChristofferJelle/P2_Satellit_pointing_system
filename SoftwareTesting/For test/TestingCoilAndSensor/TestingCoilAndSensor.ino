@@ -6,8 +6,8 @@
 
 ICM20600 icm20600(true);
 
-Kalman kalmanZ;  // Create the Kalman instances
-//Kalman kalmanX, kalmanY,
+Kalman kalmanZ;  // Create Kalman instances
+
 AK09918 ak09918;
 int32_t magX, magY, magZ;
 float magXC, magYC, magZC;
@@ -17,18 +17,12 @@ float calibrated_values[3];
 
 float gyroZ;
 double gyroZrate;
-double yaw;  // Roll and pitch are calculated using the accelerometer while yaw is calculated using the magnetometer
-//double roll, pitch,
+double yaw;  // yaw is calculated using the magnetometer
+
 double kalAngleZ;  // Calculated angle using a Kalman filter
-//double kalAngleX, kalAngleY,
 uint32_t timer;
 
 double dt;
-
-//PID
-//#define PIN_INPUT 0
-//#define PIN_OUTPUT 3
-
 
 double setpoint = 180.0, Output;
 //Define the aggressive and conservative Tuning Parameters
@@ -69,12 +63,12 @@ int lastTime = timer - 5000;
 // ===========================TFT============================
 //for testing pointing system only
 /**/
-#include <TFT_eSPI.h>  // LILYGO T-Display library
+#include <TFT_eSPI.h>  // LILYGO T-Display s3 library
 #include <SPI.h>
 
 TFT_eSPI tft = TFT_eSPI();  // Create TFT object+
 
-// number field positions/sizes for tft refrech areas
+// number field positions/sizes for tft refresh areas
 const int spX = 120;
 const int spY = 0;
 const int spW = 80;
@@ -91,17 +85,17 @@ const int PIDW = 80;
 const int PIDH = 16 * 2;
 
 void setup() {
-
+//define I2C pins, with "wire" library then inizialise it
   int sda_pin = 43;
   int scl_pin = 44;
-
   Wire.setPins(sda_pin, scl_pin);
   Wire.begin();
+//start magnetometer on IMU module
   ak09918.initialize();
   ak09918.switchMode(AK09918_POWER_DOWN);
   ak09918.switchMode(AK09918_NORMAL); //insted of using Continuous measurement mode only power magometer when calling getData()
 
-
+//start gyro on IMU module
   icm20600.setGyroScaleRange(RANGE_1K_DPS);
   icm20600.initialize();
 
@@ -112,11 +106,8 @@ void setup() {
   /* Set Kalman and gyro starting angle */
   UpdateAK09918();
   UpdateICM20600();
-  //UpdatePitchRoll();
   UpdateYaw();
 
-  //kalmanX.setAngle(roll);
-  //kalmanY.setAngle(pitch);
   kalmanZ.setAngle(yaw);
 
   //turn the PID on
@@ -134,10 +125,7 @@ void setup() {
   coils[1].fwdPin = Coil2Fwd;
 
   //=========================ESPNOW=============================
-  //pinMode(BUTTON_PIN, INPUT);
   InitESP32_NOW();
-
-  //Serial.println(WiFi.macAddress());
   /*
   Serial.print("[DEFAULT] ESP32 Board MAC Address: ");
   uint8_t* ownMac = readMacAddress();
@@ -157,7 +145,7 @@ void setup() {
 }
 
 void loop() {
-  dt = (double)(micros() - timer) / 1000000;  // Calculate delta time
+  dt = (double)(micros() - timer) / 1000000;  // Calculate delta time for kalman filter
   timer = micros();
   RunCoils();
 }

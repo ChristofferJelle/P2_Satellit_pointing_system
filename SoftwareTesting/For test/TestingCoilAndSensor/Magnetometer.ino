@@ -1,9 +1,10 @@
+//gets the data from magnetometer, tekniskset har ikke bruge for x og y akser.
 void UpdateAK09918() {
   ak09918.getData(&magX, &magY, &magZ);
   uncalibrated_values[0] = magX;
   uncalibrated_values[1] = magY;
   uncalibrated_values[2] = magZ;
-  transformation(uncalibrated_values);
+  transformation(uncalibrated_values); //calibrering
 }
 
 //https://www.instructables.com/Easy-hard-and-soft-iron-magnetometer-calibration/
@@ -34,10 +35,11 @@ void transformation(float uncalibrated_values[3]) {
   magYC = calibrated_values[1];
   magZC = calibrated_values[2];
 }
-
+//yaw is the angle. which we calculate from magnetometer
 void UpdateYaw() { 
   yaw = atan2(magYC, magXC) * RAD_TO_DEG;
 }
+//kalmanfilter on the angle
 void calculateZAngle() {
   // This fixes the transition problem when the yaw angle jumps between -180 and 180 degrees
   if ((yaw < -90 && kalAngleZ > 90) || (yaw > 90 && kalAngleZ < -90)) {
