@@ -84,24 +84,31 @@ const int PIDY = 60;
 const int PIDW = 80;
 const int PIDH = 16 * 2;
 
+//===================BUTTONS====================
+#define BUTTON_PIN_SHUT 14  // GPIO21 pin connected to button
+
+// Variables will change:
+bool lastStateButS = HIGH;  // the previous state from the input pin
+bool switchPower = false;
+
 void setup() {
-//define I2C pins, with "wire" library then inizialise it
+  //define I2C pins, with "wire" library then inizialise it
   int sda_pin = 43;
   int scl_pin = 44;
   Wire.setPins(sda_pin, scl_pin);
   Wire.begin();
-//start magnetometer on IMU module
+  //start magnetometer on IMU module
   ak09918.initialize();
   ak09918.switchMode(AK09918_POWER_DOWN);
-  ak09918.switchMode(AK09918_NORMAL); //insted of using Continuous measurement mode only power magometer when calling getData()
+  ak09918.switchMode(AK09918_NORMAL);  //insted of using Continuous measurement mode only power magometer when calling getData()
 
-//start gyro on IMU module
+  //start gyro on IMU module
   icm20600.setGyroScaleRange(RANGE_1K_DPS);
   icm20600.initialize();
 
   InitDisplay();
 
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   /* Set Kalman and gyro starting angle */
   UpdateAK09918();
@@ -141,11 +148,31 @@ void setup() {
     Serial.println(ownMacHex);
   }
 */
+  //===================BUTTONS====================
+  // initialize the pushbutton pin as an pull-up input
+ pinMode(BUTTON_PIN_SHUT, INPUT_PULLUP);
+
+  //timer
   timer = micros();  // Initialize the timer
 }
 
 void loop() {
   dt = (double)(micros() - timer) / 1000000;  // Calculate delta time for kalman filter
   timer = micros();
-  RunCoils();
+
+
+// Read the button
+  bool currentStateButS = digitalRead(BUTTON_PIN_SHUT);
+
+  // Check for PRESS (State goes from HIGH to LOW)
+  if (lastStateButS == LOW && currentStateButS == HIGH) {
+    Serial.println("Button Pressed!");
+    switchPower = !switchPower; // Simplified toggle 
+  }
+  
+  lastStateButS = currentStateButS;
+
+    if (switchPower) {
+    RunCoils();
+  }
 }
