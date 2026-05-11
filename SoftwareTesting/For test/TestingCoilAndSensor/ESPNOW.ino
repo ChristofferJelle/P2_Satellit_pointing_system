@@ -20,10 +20,10 @@ void DrawDisplay() {
   tft.setCursor(0, 30);
   tft.print("Aktuel vinkel: ");
   if (kalAngleZ < 0) {
-    tft.print(yaw, 1);  // 1 decimal place
+    tft.print(kalAngleZ, 1);  // 1 decimal place
   } else {
     tft.print("+");
-    tft.print(yaw, 1);  // 1 decimal place
+    tft.print(kalAngleZ, 1);  // 1 decimal place
   }
   tft.fillRect(PIDX, PIDY, PIDW, PIDH, TFT_BLACK);
   tft.setCursor(0, 60);

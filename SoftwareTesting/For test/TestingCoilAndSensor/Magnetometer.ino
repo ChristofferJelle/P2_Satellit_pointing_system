@@ -12,18 +12,31 @@ void transformation(float uncalibrated_values[3]) {
   //calibration_matrix[3][3] is the transformation matrix
   //soft iron calibartion
   double calibration_matrix[3][3] = {
+    { 1.107, -0.077, 0.024 },
+    { -0.02, 1.103, -0.018 },
+    { -0.005, -0.114, 1.02 }
+  };
+/*old calibration values
+  double calibration_matrix[3][3] = {
     { 1.283, -0.061, -0.02 },
     { 0.053, 1.275, 0.115 },
     { 0.067, -0.097, 1.231 }
   };
+*/
   //bias[3] is the bias
   //replace Bx, By, Bz with your bias data
   // hard iron calibration
   double bias[3] = {
+    8.384,
+    -17.321,
+    9.827
+  };
+  /*old calibration values
+    double bias[3] = {
     3.263,
     8.404,
     27.814
-  };
+  }; */
   //calculation
   for (int i = 0; i < 3; ++i) uncalibrated_values[i] = uncalibrated_values[i] - bias[i];
   float result[3] = { 0, 0, 0 };
