@@ -52,7 +52,7 @@ typedef struct {
 
 coil coils[2];
 
-int sampleTime = 5000;  // målt til 2289, worked ish at 5000
+int sampleTime = 2289;  // målt til 2289, worked ish at 5000
 int lastTime = timer - sampleTime;
 
 // ===========================ESPNOW============================
