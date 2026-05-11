@@ -30,8 +30,8 @@ double kalAngleX, kalAngleY, kalAngleZ;     // Calculated angle using a Kalman f
 uint32_t timer;
 
 void setup() {
-  int sda_pin = 7;
-  int scl_pin = 8;
+  int sda_pin = 43;
+  int scl_pin = 44;
 
   Wire.setPins(sda_pin, scl_pin);
   Wire.begin();
@@ -39,7 +39,7 @@ void setup() {
   ak09918.switchMode(AK09918_CONTINUOUS_100HZ);
   icm20600.setGyroScaleRange(RANGE_1K_DPS);
   icm20600.initialize();
-Serial.begin(115200);
+  Serial.begin(115200);
 
   /* Set Kalman and gyro starting angle */
   UpdateAK09918();
@@ -162,5 +162,4 @@ void loop() {
   Serial.print("\t");
 
   Serial.println();
-
 }

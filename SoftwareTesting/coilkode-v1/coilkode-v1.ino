@@ -1,7 +1,7 @@
-#define Coil1Fwd 3
-#define Coil1Rvr 9
-#define Coil2Fwd 10
-#define Coil2Rvr 11
+#define Coil1Fwd 1
+#define Coil1Rvr 13
+#define Coil2Fwd 21
+#define Coil2Rvr 16 
 
 typedef struct {
   bool running = false;
@@ -29,6 +29,7 @@ void setup() {
   coils[1].rvrPin = Coil2Rvr;
   coils[1].fwdPin = Coil2Fwd;
 
+  pinMode(15, OUTPUT);
   // StartCoil(1, 255, 120000, true);
 }
 
@@ -39,29 +40,28 @@ uint32_t var3;
 void loop() {
   // put your main code here, to run repeatedly:
   RunCoils();
+
+  digitalWrite(15, HIGH);
   // if (millis() % 4000 >= 2000) {
   //     StartCoil(1, 255, 100, true);
   // } else {
   //     StartCoil(1, 255, 100, false);
   // }
- 
+
   if (millis() % 4000 >= 2000) {
     if (millis() % 2000 >= 1000) {
       var1 = millis() % 1000;
       var1 = map(var1, 0, 999, 255, 0);
-    }
-    else {
+    } else {
       var1 = millis() % 1000;
       var1 = map(var1, 0, 999, 0, 255);
     }
     StartCoil(1, var1, 10, true);
-  }
-  else {
+  } else {
     if (millis() % 2000 >= 1000) {
       var1 = millis() % 1000;
       var1 = map(var1, 0, 999, 255, 0);
-    }
-    else {
+    } else {
       var1 = millis() % 1000;
       var1 = map(var1, 0, 999, 0, 255);
     }

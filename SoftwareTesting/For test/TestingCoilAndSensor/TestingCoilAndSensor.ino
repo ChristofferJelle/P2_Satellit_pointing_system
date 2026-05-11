@@ -34,10 +34,10 @@ PID myPID(&kalAngleZ, &Output, &setpoint, consKp, consKi, consKd, DIRECT);
 
 //COILS ============================================================================
 
-#define Coil1Fwd 3
-#define Coil1Rvr 9
-#define Coil2Fwd 10
-#define Coil2Rvr 11
+#define Coil1Fwd 1
+#define Coil1Rvr 13
+#define Coil2Fwd 21
+#define Coil2Rvr 16
 
 typedef struct {
   bool running = false;
@@ -52,10 +52,11 @@ typedef struct {
 
 coil coils[2];
 
-int sampleTime = 5000;  // 500 milis in marcro
-int lastTime = timer - 5000;
+int sampleTime = 5000;  // målt til 2289, worked ish at 5000
+int lastTime = timer - sampleTime;
 
 // ===========================ESPNOW============================
+
 #include <esp_now.h>
 #include <WiFi.h>
 #include <esp_wifi.h>
@@ -119,7 +120,6 @@ void setup() {
 
   //turn the PID on
   myPID.SetMode(AUTOMATIC);
-  myPID.SetSampleTime(10);
 
   // =========================COILS====================================
   pinMode(Coil1Fwd, OUTPUT);
@@ -152,6 +152,8 @@ void setup() {
   // initialize the pushbutton pin as an pull-up input
   pinMode(BUTTON_PIN_SHUT, INPUT_PULLUP);
   pinMode(15, OUTPUT);
+//pid
+  //myPID.SetSampleTime(3);
   //timer
   timer = micros();  // Initialize the timer
 }

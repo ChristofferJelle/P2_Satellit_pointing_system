@@ -19,5 +19,5 @@ void PID() {
     StartCoil(2, Output, 10, false);
     //reverse it homebridge go brr ig?
     //analogWrite(PIN2_OUTPUT, Output);
-  } 
+  }
 }

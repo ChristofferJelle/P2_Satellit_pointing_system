@@ -19,12 +19,16 @@ void DrawDisplay() {
   tft.fillRect(akX, akY, akW, akH, TFT_BLACK);
   tft.setCursor(0, 30);
   tft.print("Aktuel vinkel: ");
-  tft.print(yaw, 1);  // 1 decimal place
-
+  if (kalAngleZ < 0) {
+    tft.print(yaw, 1);  // 1 decimal place
+  } else {
+    tft.print("+");
+    tft.print(yaw, 1);  // 1 decimal place
+  }
   tft.fillRect(PIDX, PIDY, PIDW, PIDH, TFT_BLACK);
   tft.setCursor(0, 60);
   tft.print("PID output: ");
-  tft.print(Output, 1);  // 1 decimal place
+  tft.print((int)Output, 1);  // 1 decimal place
 }
 
 //initialise everything that has to do with setting up ESPNOW library
@@ -57,5 +61,3 @@ uint8_t* readMacAddress() {
     return nullptr;
   }
 }
-
-
