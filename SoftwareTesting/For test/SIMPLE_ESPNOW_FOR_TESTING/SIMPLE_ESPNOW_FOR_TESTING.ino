@@ -4,7 +4,7 @@
 #include <string.h>
 
 //adress of the mainESP32 in sending data to
-uint8_t broadcastAddress[] = { 0xf0, 0x9e, 0x9e, 0x1f, 0x0a, 0xa0 };  //idk what main called rn
+uint8_t broadcastAddress[] = { 0xf0, 0x9e, 0x9e, 0x1f, 0x0a, 0xa0 }; 
 
 esp_now_peer_info_t peerInfo;
 
@@ -14,7 +14,7 @@ double setpoint;
 void setup() {
   Serial.begin(115200);
   InitESP32_NOW();
-
+  
   registerPeers();
   //outgoingStruct.id = WiFi.macAddress();
 }

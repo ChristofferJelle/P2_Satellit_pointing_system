@@ -150,8 +150,8 @@ void setup() {
 */
   //===================BUTTONS====================
   // initialize the pushbutton pin as an pull-up input
- pinMode(BUTTON_PIN_SHUT, INPUT_PULLUP);
-
+  pinMode(BUTTON_PIN_SHUT, INPUT_PULLUP);
+  pinMode(15, OUTPUT);
   //timer
   timer = micros();  // Initialize the timer
 }
@@ -160,19 +160,19 @@ void loop() {
   dt = (double)(micros() - timer) / 1000000;  // Calculate delta time for kalman filter
   timer = micros();
 
+  digitalWrite(15, HIGH);
 
-// Read the button
+  // Read the button
   bool currentStateButS = digitalRead(BUTTON_PIN_SHUT);
 
   // Check for PRESS (State goes from HIGH to LOW)
   if (lastStateButS == LOW && currentStateButS == HIGH) {
     Serial.println("Button Pressed!");
-    switchPower = !switchPower; // Simplified toggle 
+    switchPower = !switchPower;  // Simplified toggle
   }
-  
   lastStateButS = currentStateButS;
 
-    if (switchPower) {
+  if (switchPower) {
     RunCoils();
   }
 }
