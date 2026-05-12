@@ -40,8 +40,8 @@ void InitESP32_NOW() {
   if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
   }
-  //Register that i want to recive to cb (call back). Basically says "everytime i send data u just need to run this too"
-  esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
+    //Register that i want to recive to cb (call back). Basically says "everytime i send data u just need to run this too"
+    esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
 }
 
 // Callback when data is received
@@ -50,7 +50,35 @@ void OnDataRecv(const uint8_t* mac, const uint8_t* incomingData, int len) {
   Serial.println(setpoint);
 }
 
-//this funktion just uses a funktion to get the mac address and then returns it....and checks if it actually got it
+//registers peers with the data it needs to send data
+void registerPeers() {
+
+  // Register peer
+  for (int i = 0; i < 6; i++) {
+    peerInfo.peer_addr[i] = broadcastAddress[i];
+  }
+  peerInfo.channel = 0;
+  peerInfo.encrypt = false;
+
+  Serial.println("Peer MAC:");
+  AddressOfPeer(broadcastAddress);
+
+  if (esp_now_add_peer(&peerInfo) == ESP_OK) {
+    Serial.println("Peer added successfully");
+  } else {
+    Serial.print("Failed to add peer Error code: ");
+    Serial.println(esp_now_add_peer(&peerInfo));
+  }
+}
+
+//dont really need to be a funktion since its one line if code but its here ig in the case we want to uncomment the error handler part.
+void SendDataToMaster(double sendingAngle) {
+  // Send message via ESP-NOW
+  //Serial.println(sendingAngle);
+  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t*)&sendingAngle, sizeof(sendingAngle));
+  // Serial.println(result);
+  //this funktion just uses a funktion to get the mac address and then returns it....and checks if it actually got it
+}
 uint8_t* readMacAddress() {
   static uint8_t baseMac[6];
   esp_err_t ret = esp_wifi_get_mac(WIFI_IF_STA, baseMac);
@@ -59,5 +87,12 @@ uint8_t* readMacAddress() {
   } else {
     Serial.println("Failed to read MAC address");
     return nullptr;
+  }
+}
+void AddressOfPeer(uint8_t peerInfoMAC[]) {
+  for (int i = 0; i < 6; i++) {
+    if (peerInfoMAC[i] < 16) { Serial.print("0"); }  // zero pad
+    Serial.print(peerInfoMAC[i], HEX);
+    if (i < 5) { Serial.print(":"); }
   }
 }

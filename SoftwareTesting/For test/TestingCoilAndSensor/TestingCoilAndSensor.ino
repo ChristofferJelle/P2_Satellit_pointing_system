@@ -27,8 +27,9 @@ double dt;
 double setpoint = 180.0, Output;
 //Define the aggressive and conservative Tuning Parameters
 double aggKp = 4, aggKi = 0.2, aggKd = 1;
+double consKp = 1.2, consKi = 0.05, consKd = 0.25;
 //double consKp = 1, consKi = 0.05, consKd = 0.25;
-double consKp = 0.5, consKi = 0.0025, consKd = 0.125;
+//double consKp = 0.5, consKi = 0.0025, consKd = 0.125;
 //Specify the links and initial tuning parameters
 PID myPID(&kalAngleZ, &Output, &setpoint, consKp, consKi, consKd, DIRECT);
 
@@ -55,11 +56,19 @@ coil coils[2];
 int sampleTime = 2289;  // målt til 2289, worked ish at 5000
 int lastTime = timer - sampleTime;
 
+
+double gap;
+
 // ===========================ESPNOW============================
 
 #include <esp_now.h>
 #include <WiFi.h>
 #include <esp_wifi.h>
+//adress of the mainESP32 in sending data to
+uint8_t broadcastAddress[] = { 0x98, 0xa3, 0x16, 0xf8, 0x2c, 0x90 };
+
+esp_now_peer_info_t peerInfo;
+//MAC: 98:a3:16:f8:2c:90
 
 // ===========================TFT============================
 //for testing pointing system only
@@ -118,6 +127,8 @@ void setup() {
 
   kalmanZ.setAngle(yaw);
 
+  gap = abs(setpoint - kalAngleZ);
+
   //turn the PID on
   myPID.SetMode(AUTOMATIC);
 
@@ -133,6 +144,7 @@ void setup() {
 
   //=========================ESPNOW=============================
   InitESP32_NOW();
+  registerPeers();
   /*
   Serial.print("[DEFAULT] ESP32 Board MAC Address: ");
   uint8_t* ownMac = readMacAddress();
@@ -152,7 +164,7 @@ void setup() {
   // initialize the pushbutton pin as an pull-up input
   pinMode(BUTTON_PIN_SHUT, INPUT_PULLUP);
   pinMode(15, OUTPUT);
-//pid
+  //pid
   //myPID.SetSampleTime(3);
   //timer
   timer = micros();  // Initialize the timer

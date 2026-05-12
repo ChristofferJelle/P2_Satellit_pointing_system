@@ -7,15 +7,30 @@ void InitESP32_NOW() {
     Serial.println("Error initializing ESP-NOW");
     return;
   }
+  //Register that i want to recive to cb (call back). Basically says "everytime i send data u just need to run this too"
+  esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
+}
+
+// Callback when data is received
+void OnDataRecv(const uint8_t* mac, const uint8_t* incomingData, int len) {
+  memcpy(&kalAngleZ, incomingData, sizeof(setpoint));
+
+  now = millis();
+  unsigned long timeChange = (now - lastTime);
+  if (timeChange >= sampleTime) {
+    Serial.println(kalAngleZ);
+  }
 }
 
 //dont really need to be a funktion since its one line if code but its here ig in the case we want to uncomment the error handler part.
 void SendDataToMaster(double sendingSetpoint) {
   // Send message via ESP-NOW
-  Serial.println(sendingSetpoint);
+  //Serial.println(sendingSetpoint);
+  now = millis();
+  lastTime = now;
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t*)&sendingSetpoint, sizeof(sendingSetpoint));
- // Serial.println(result);
-  
+  // Serial.println(result);
+  /*
   //this was "too loud" in the serial moniter so i commented it
   if (result == ESP_OK) {
     Serial.print("Sent with success to ");
@@ -27,7 +42,7 @@ void SendDataToMaster(double sendingSetpoint) {
     AddressOfPeer(broadcastAddress);
     Serial.println();
   }
-
+  */
 }
 
 //registers peers with the data it needs to send data

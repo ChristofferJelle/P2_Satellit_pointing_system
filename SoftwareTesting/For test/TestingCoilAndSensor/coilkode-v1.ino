@@ -40,7 +40,9 @@ void RunCoils() {
       calculateZAngle();
       PID();  //pid starts coils again
       DrawDisplay();
+      SendDataToMaster(kalAngleZ);
       lastTime = now;
+      
     }
   }
 }
