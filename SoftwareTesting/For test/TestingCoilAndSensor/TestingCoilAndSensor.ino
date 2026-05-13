@@ -57,8 +57,6 @@ int sampleTime = 2289;  // målt til 2289, worked ish at 5000
 int lastTime = timer - sampleTime;
 
 
-double gap;
-
 // ===========================ESPNOW============================
 
 #include <esp_now.h>
@@ -126,8 +124,6 @@ void setup() {
   UpdateYaw();
 
   kalmanZ.setAngle(yaw);
-
-  gap = abs(setpoint - kalAngleZ);
 
   //turn the PID on
   myPID.SetMode(AUTOMATIC);
