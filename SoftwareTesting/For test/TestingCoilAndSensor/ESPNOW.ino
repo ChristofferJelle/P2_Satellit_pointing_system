@@ -40,14 +40,16 @@ void InitESP32_NOW() {
   if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
   }
-    //Register that i want to recive to cb (call back). Basically says "everytime i send data u just need to run this too"
-    esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
+  //Register that i want to recive to cb (call back). Basically says "everytime i send data u just need to run this too"
+  esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
 }
 
 // Callback when data is received
 void OnDataRecv(const uint8_t* mac, const uint8_t* incomingData, int len) {
   memcpy(&setpoint, incomingData, sizeof(setpoint));
   Serial.println(setpoint);
+  my1PID.Compute();
+  my2PID.Compute();
 }
 
 //registers peers with the data it needs to send data
@@ -72,10 +74,12 @@ void registerPeers() {
 }
 
 //dont really need to be a funktion since its one line if code but its here ig in the case we want to uncomment the error handler part.
-void SendDataToMaster(double sendingAngle) {
-  // Send message via ESP-NOW
+void SendDataToMaster() {
+  //Send message via ESP-NOW
   //Serial.println(sendingAngle);
-  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t*)&sendingAngle, sizeof(sendingAngle));
+  incomingStuct1.kalAngleZ = kalAngleZ;
+  incomingStuct1.OutputPID = Output;
+  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t*)&incomingStuct1, sizeof(incomingStuct1));
   // Serial.println(result);
   //this funktion just uses a funktion to get the mac address and then returns it....and checks if it actually got it
 }

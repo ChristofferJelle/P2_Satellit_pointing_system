@@ -13,14 +13,9 @@ void InitESP32_NOW() {
 
 // Callback when data is received
 void OnDataRecv(const uint8_t* mac, const uint8_t* incomingData, int len) {
-  memcpy(&kalAngleZ, incomingData, sizeof(setpoint));
-
-  now = millis();
-  unsigned long timeChange = (now - lastTime);
-  if (timeChange >= sampleTime) {
-    Serial.println(kalAngleZ);
-  }
+  memcpy(&incomingStuct1, incomingData, sizeof(incomingStuct1));
 }
+
 
 //dont really need to be a funktion since its one line if code but its here ig in the case we want to uncomment the error handler part.
 void SendDataToMaster(double sendingSetpoint) {

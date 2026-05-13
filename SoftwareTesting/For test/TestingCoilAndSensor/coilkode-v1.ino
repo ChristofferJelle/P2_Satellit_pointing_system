@@ -1,4 +1,4 @@
-//blame Lucas for mangle af commentar.
+//startCoil(CoilID, pwm, timeTurnedOn, Hbro vending)
 void StartCoil(int coilNumber, int power, uint32_t duration, bool forward) {
   coils[coilNumber].startTime = millis();
   coils[coilNumber].runTime = duration;
@@ -40,7 +40,7 @@ void RunCoils() {
       calculateZAngle();
       PID();  //pid starts coils again
       DrawDisplay();
-      SendDataToMaster(kalAngleZ);
+      SendDataToMaster();
       lastTime = now;
       
     }

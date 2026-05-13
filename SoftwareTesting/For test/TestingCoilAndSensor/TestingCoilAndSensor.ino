@@ -24,15 +24,23 @@ uint32_t timer;
 
 double dt;
 
-double setpoint = 180.0, Output;
+double setpoint = 180.0, Output, Output2;
 //Define the aggressive and conservative Tuning Parameters
-double aggKp = 4, aggKi = 0.2, aggKd = 1;
+double aggKp = 3, aggKi = 0.2, aggKd = 1;
 double consKp = 1.2, consKi = 0.05, consKd = 0.25;
 //double consKp = 1, consKi = 0.05, consKd = 0.25;
-//double consKp = 0.5, consKi = 0.0025, consKd = 0.125;
-//Specify the links and initial tuning parameters
-PID myPID(&kalAngleZ, &Output, &setpoint, consKp, consKi, consKd, DIRECT);
+//double aggKp = 4, aggKi = 0.2, aggKd = 1;
 
+//Specify the links and initial tuning parameters
+PID my1PID(&kalAngleZ, &Output, &setpoint, aggKp, aggKi, aggKd, DIRECT);
+PID my2PID(&kalAngleZ, &Output2, &setpoint, consKp, consKi, consKd, DIRECT);
+struct incomingStuct {
+  double kalAngleZ;
+  double OutputPID;
+};
+incomingStuct incomingStuct1;
+
+double gap;
 //COILS ============================================================================
 
 #define Coil1Fwd 1
@@ -56,8 +64,6 @@ coil coils[2];
 int sampleTime = 2289;  // målt til 2289, worked ish at 5000
 int lastTime = timer - sampleTime;
 
-
-double gap;
 
 // ===========================ESPNOW============================
 
@@ -127,11 +133,9 @@ void setup() {
 
   kalmanZ.setAngle(yaw);
 
-  gap = abs(setpoint - kalAngleZ);
-
   //turn the PID on
-  myPID.SetMode(AUTOMATIC);
-
+  my1PID.SetMode(AUTOMATIC);
+  my2PID.SetMode(AUTOMATIC);
   // =========================COILS====================================
   pinMode(Coil1Fwd, OUTPUT);
   pinMode(Coil1Rvr, OUTPUT);
@@ -166,6 +170,7 @@ void setup() {
   pinMode(15, OUTPUT);
   //pid
   //myPID.SetSampleTime(3);
+  gap = abs(setpoint - kalAngleZ);
   //timer
   timer = micros();  // Initialize the timer
 }
