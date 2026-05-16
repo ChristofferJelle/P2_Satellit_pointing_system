@@ -15,8 +15,12 @@ void RunCoils() {
   unsigned long timeChange = (now - lastTime);
 
   for (int i = 0; i <= 1; i++) {
+    /*
+    Could be simpler with an enumerater for states, since it being on is implicit if you already told it to go forward/backward and not off,
+    your bascially asking if you gave it power, and if its on, which seems redundant.
+    states: off, forward, backwards.  
+    */  
     if (coils[i].running && !coils[i].hasInput) {
-
       if (coils[i].forward) {
         analogWrite(coils[i].fwdPin, coils[i].power);
         coils[i].hasInput = true;
@@ -42,7 +46,6 @@ void RunCoils() {
       DrawDisplay();
       SendDataToMaster(kalAngleZ);
       lastTime = now;
-      
     }
   }
 }

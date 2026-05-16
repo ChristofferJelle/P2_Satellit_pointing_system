@@ -79,6 +79,7 @@ void SendDataToMaster(double sendingAngle) {
   // Serial.println(result);
   //this funktion just uses a funktion to get the mac address and then returns it....and checks if it actually got it
 }
+
 uint8_t* readMacAddress() {
   static uint8_t baseMac[6];
   esp_err_t ret = esp_wifi_get_mac(WIFI_IF_STA, baseMac);
@@ -89,6 +90,7 @@ uint8_t* readMacAddress() {
     return nullptr;
   }
 }
+
 void AddressOfPeer(uint8_t peerInfoMAC[]) {
   for (int i = 0; i < 6; i++) {
     if (peerInfoMAC[i] < 16) { Serial.print("0"); }  // zero pad
