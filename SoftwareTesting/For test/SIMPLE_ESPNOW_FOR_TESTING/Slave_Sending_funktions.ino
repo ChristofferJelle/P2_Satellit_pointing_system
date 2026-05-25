@@ -16,8 +16,6 @@ void OnDataRecv(const uint8_t* mac, const uint8_t* incomingData, int len) {
   memcpy(&kalAngleZ, incomingData, sizeof(setpoint));
   GONOW = true;
 }
-
-//dont really need to be a funktion since its one line if code but its here ig in the case we want to uncomment the error handler part.
 void SendDataToMaster(double sendingSetpoint) {
   // Send message via ESP-NOW
   //Serial.println(sendingSetpoint);
@@ -25,19 +23,6 @@ void SendDataToMaster(double sendingSetpoint) {
   lastTime = now;
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t*)&sendingSetpoint, sizeof(sendingSetpoint));
   // Serial.println(result);
-  /*
-  //this was "too loud" in the serial moniter so i commented it
-  if (result == ESP_OK) {
-    Serial.print("Sent with success to ");
-    AddressOfPeer(broadcastAddress);
-    Serial.println();
-  } else {
-    Serial.print("Error sending the data to ");
-
-    AddressOfPeer(broadcastAddress);
-    Serial.println();
-  }
-  */
 }
 
 //registers peers with the data it needs to send data

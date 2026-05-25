@@ -11,7 +11,6 @@ void InitDisplay() {
 void DrawDisplay() {
   // Erase previous numbers by drawing a filled rectangle in background color
   tft.fillRect(spX, spY, spW, spH, TFT_BLACK);
-
   tft.setCursor(0, 0);
   tft.print("Setpoint: ");
   tft.print(setpoint, 1);  // 1 decimal place
@@ -71,7 +70,7 @@ void registerPeers() {
   }
 }
 
-//dont really need to be a funktion since its one line if code but its here ig in the case we want to uncomment the error handler part.
+
 void SendDataToMaster(double sendingAngle) {
   // Send message via ESP-NOW
   //Serial.println(sendingAngle);

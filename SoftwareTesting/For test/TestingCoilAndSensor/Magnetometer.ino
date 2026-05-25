@@ -16,13 +16,7 @@ void transformation(float uncalibrated_values[3]) {
     { -0.02, 1.103, -0.018 },
     { -0.005, -0.114, 1.02 }
   };
-/*old calibration values
-  double calibration_matrix[3][3] = {
-    { 1.283, -0.061, -0.02 },
-    { 0.053, 1.275, 0.115 },
-    { 0.067, -0.097, 1.231 }
-  };
-*/
+
   //bias[3] is the bias
   //replace Bx, By, Bz with your bias data
   // hard iron calibration

@@ -1,4 +1,3 @@
-//blame Lucas for mangle af commentar.
 void StartCoil(int coilNumber, int power, uint32_t duration, bool forward) {
   coils[coilNumber].startTime = millis();
   coils[coilNumber].runTime = duration;
@@ -18,7 +17,7 @@ void RunCoils() {
     /*
     Could be simpler with an enumerater for states, since it being on is implicit if you already told it to go forward/backward and not off,
     your bascially asking if you gave it power, and if its on, which seems redundant.
-    states: off, forward, backwards.  
+    states: off, forward, backwards.  -Chris
     */  
     if (coils[i].running && !coils[i].hasInput) {
       if (coils[i].forward) {
@@ -36,7 +35,7 @@ void RunCoils() {
       coils[i].hasInput = false;
       lastTime = now;  //should only run once, when the coils done moving
     }
-    if (!(coils[0].running && coils[1].running) && (timeChange >= sampleTime)) {  //use magnetometer after 0.4 sek of coils turning off
+    if (!(coils[0].running && coils[1].running) && (timeChange >= sampleTime)) {  //use magnetometer after "sampleTime" sek of coils turning off
       UpdateAK09918();
       UpdateICM20600();
       /* Yaw estimation for Z angle */

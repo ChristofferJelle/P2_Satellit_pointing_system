@@ -6,7 +6,7 @@
 
 ICM20600 icm20600(true);
 
-Kalman kalmanZ;  // Create Kalman instances
+Kalman kalmanZ;  //Kalman instance
 
 AK09918 ak09918;
 int32_t magX, magY, magZ;
@@ -25,12 +25,12 @@ uint32_t timer;
 double dt;
 
 double setpoint = 180.0, Output;
-//Define the aggressive and conservative Tuning Parameters
+//the aggressive and conservative Tuning Parameters for PID
 double aggKp = 4, aggKi = 0.2, aggKd = 1;
 double consKp = 1.2, consKi = 0.05, consKd = 0.25;
 //double consKp = 1, consKi = 0.05, consKd = 0.25;
 //double consKp = 0.5, consKi = 0.0025, consKd = 0.125;
-//Specify the links and initial tuning parameters
+
 PID myPID(&kalAngleZ, &Output, &setpoint, consKp, consKi, consKd, DIRECT);
 
 //COILS ============================================================================
@@ -53,7 +53,7 @@ typedef struct {
 
 coil coils[2];
 
-int sampleTime = 2289;  // målt til 2289, worked ish at 5000
+int sampleTime = 2289;  // beregnet til at være 2289
 int lastTime = timer - sampleTime;
 
 
@@ -62,7 +62,7 @@ int lastTime = timer - sampleTime;
 #include <esp_now.h>
 #include <WiFi.h>
 #include <esp_wifi.h>
-//adress of the mainESP32 in sending data to
+//adress of the mainESP32 in sending data to!!!
 uint8_t broadcastAddress[] = { 0x98, 0xa3, 0x16, 0xf8, 0x2c, 0x90 };
 
 esp_now_peer_info_t peerInfo;
@@ -108,7 +108,7 @@ void setup() {
   //start magnetometer on IMU module
   ak09918.initialize();
   ak09918.switchMode(AK09918_POWER_DOWN);
-  ak09918.switchMode(AK09918_NORMAL);  //insted of using Continuous measurement mode only power magometer when calling getData()
+  ak09918.switchMode(AK09918_NORMAL);  //insted of using Continuous measurement mode, this only power magometer when calling getData()
 
   //start gyro on IMU module
   icm20600.setGyroScaleRange(RANGE_1K_DPS);
@@ -125,7 +125,7 @@ void setup() {
 
   kalmanZ.setAngle(yaw);
 
-  //turn the PID on
+  //initialisation for PID
   myPID.SetMode(AUTOMATIC);
 
   // =========================COILS====================================

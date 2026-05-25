@@ -30,8 +30,6 @@ void setup() {
   timer = millis();
 }
 
-//if its not connected to the master/main esp32 then keep trying to ping with it's outgoing struct, which includes its own mac address as an id so it can be added as a peer, aka be connected
-//it gets conncted when the master returns the 'R' command, which sets ConnectedToMaster to false in the OnDataRecv() callback funktion
 void loop() {
   if (Serial.available() > 0) {
     // Read the incoming data as an integer
